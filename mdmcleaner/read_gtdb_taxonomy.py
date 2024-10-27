@@ -15,7 +15,7 @@ refseq_dbsource_dict = { refseq_vireukcat : {"url":"{}/{}/".format(ftp_adress_re
 refseq_dbsource_dict["crc"] = { "url": "{}/release-catalog/".format(ftp_adress_refseqrelease), "pattern" : "release*.files.installed" } #TODO: add eukaryotic 18S/28S + ITS seqeunces to this! either silva or ncbi?
 
 MD5FILEPATTERN_GTDB = "MD5SUM*"
-gtdb_server = "https://data.ace.uq.edu.au/public/gtdb/data/releases/latest"
+gtdb_server = "https://data.gtdb.ecogenomic.org/releases/latest"
 gtdb_source_dict = { "gtdb_taxfiles" : { "url": "{}/".format(gtdb_server), "pattern" : "{}".format(",".join(["*_taxonomy.tsv", MD5FILEPATTERN_GTDB]))}, \
 					 "gtdb_fastas" : { "url": "{}/genomic_files_reps".format(gtdb_server), "pattern" : "gtdb_genomes_reps.tar.gz,gtdb_proteins_aa_reps.tar.gz" }, \
 					 "gtdb_vs_ncbi_lookup" : { "url" : "{}/auxillary_files".format(gtdb_server), "pattern" : "*_vs_*.xlsx" } } #todo: remove gtdb_vs_ncbi_lookuptables
@@ -360,7 +360,7 @@ def download_silva_stuff(sourcedict = silva_source_dict, targetfolder=None, verb
 			returncode = _download_unixwget(urldict[url] + urldict["wishlist"][0], targetdir=targetfolder, verbose=verbose)
 			if returncode != 0:
 				sys.exit("\n\tERROR: can't reach silva database. please try again later\n")	
-		with open(versionfilename) as versionfile:
+		with open(versionfilename, 'r', encoding='utf-8') as versionfile:
 			version = versionfile.read().strip()
 		return version, url
 	# end of nested subfunctions
@@ -752,7 +752,7 @@ creates files for storing taxdict, LCA_walktree and acc2taxid files and returns 
 		sys.stderr.write("-->already did this step earlier. skipping it now! (delete progress marker '{}' and higher if you want to redo it)\n".format(currentprogressmarker))
 		sys.stderr.flush()
 
-	with openfile(os.path.join(targetdir, "DB_versions.txt"), "wt") as versionsfile:
+	with openfile(os.path.join(targetdir, "DB_versions.txt"), "wt", encoding='utf-8') as versionsfile:
 		versionsfile.write("GTDB version = {}\n".format(progressdump["gtdb_version"]))
 		versionsfile.write("RefSeq release = {}\n".format(progressdump["refseq_release_number"]))
 		versionsfile.write("silva_download_dict = {}\n".format(progressdump["silva_version"]))
